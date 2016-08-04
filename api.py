@@ -37,6 +37,64 @@ class SlackPoster(object):
             username='housefinder', icon_emoji=':robot_face:'
         )
 
+class TrelloPoster(object):
+
+    LISTS_URL = 'https://trello.com/1/lists/{list_id}/cards'
+    ATTACHMENTS_URL = 'https://trello.com/1/cards/{card_id}/attachments'
+
+    def __init__(self, listing):
+        self.listing = listing
+        self.session = requests.Session()
+        self.auth_params = {
+            'key': config['trello']['api_key'],
+            'token': config['trello']['token'],
+        }
+
+    def post(self):
+        card_id = self.post_card()
+        self.add_thumbnail(card_id)
+
+    def post_card(self):
+        data = {
+            'name': self.listing.displayable_address,
+            'desc': '''{listing.property_type}
+
+* {listing.price_modifier_human} £{listing.price_thousands}k
+* {listing.num_bedrooms} bedrooms
+* {listing.num_bathrooms} bathrooms
+* Details: {listing.details_url}
+
+{listing.description}
+'''.format(listing=self.listing),
+        }
+
+        response = self.session.post(
+            self.LISTS_URL.format(
+                list_id=config['trello']['list_id']
+            ),
+            data=data,
+            params=self.auth_params
+        )
+        response.raise_for_status()
+
+        card = response.json()
+        return card['id']
+
+    def add_thumbnail(self, card_id):
+        data = {
+            'url': self.listing.image_url,
+        }
+
+        response = self.session.post(
+            self.ATTACHMENTS_URL.format(
+                card_id=card_id
+            ),
+            data=data,
+            params=self.auth_params
+        )
+        response.raise_for_status()
+
+
 class Listing(Base):
     __tablename__ = 'listings'
 
@@ -73,7 +131,7 @@ class Listing(Base):
         else:
             return ''
 
-    def post_to(self, client, poster=SlackPoster):
+    def post_to(self, poster=TrelloPoster):
         poster(self).post()
 
 
@@ -157,6 +215,6 @@ if __name__ == '__main__':
     for listing in api.search_area(config['zoopla']['area'], search_params=params):
         if not listing.persisted(session):
             session.add(listing)
-            listing.post_to(slack_client)
+            listing.post_to()
 
     session.commit()
