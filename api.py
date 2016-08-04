@@ -55,8 +55,6 @@ class Listing(Base):
     num_bathrooms = sa.Column(sa.Integer)
     thumbnail_url = sa.Column(sa.String)
     image_url = sa.Column(sa.String)
-    property_type = sa.Column(sa.String)
-
 
     @property
     def price_thousands(self):
