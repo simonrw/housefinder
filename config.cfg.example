@@ -1,0 +1,11 @@
+[zoopla]
+api_key =
+minimum_price =
+maximum_price =
+minimum_beds =
+property_type =
+area =
+
+[slack]
+api_key =
+channel =
