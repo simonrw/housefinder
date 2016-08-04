@@ -145,6 +145,7 @@ class Zoopla(object):
 
 
 if __name__ == '__main__':
+    Base.metadata.create_all()
     api = Zoopla(ZOOPLA_API_KEY)
     params = SearchParameters()
     params.minimum_price = config['zoopla']['minimum_price']
