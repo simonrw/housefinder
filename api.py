@@ -56,10 +56,11 @@ class TrelloPoster(object):
 
     def post_card(self):
         data = {
-            'name': self.listing.displayable_address,
+            'name': '{listing.price_human} - {listing.displayable_address}'.format(
+                listing=self.listing),
             'desc': '''{listing.property_type}
 
-* {listing.price_modifier_human} £{listing.price_thousands}k
+* {listing.price_modifier_human} {listing.price_human}
 * {listing.num_bedrooms} bedrooms
 * {listing.num_bathrooms} bathrooms
 * Details: {listing.details_url}
@@ -117,6 +118,10 @@ class Listing(Base):
     @property
     def price_thousands(self):
         return int(self.price) // 1000
+
+    @property
+    def price_human(self):
+        return '£{}k'.format(self.price_thousands)
 
     def persisted(self, session):
         return session.query(self.__class__).get(self.listing_id) is not None
@@ -214,6 +219,7 @@ if __name__ == '__main__':
 
     for listing in api.search_area(config['zoopla']['area'], search_params=params):
         if not listing.persisted(session):
+            print(listing)
             session.add(listing)
             listing.post_to()
 
