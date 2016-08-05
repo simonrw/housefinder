@@ -3,7 +3,6 @@
 
 
 from concurrent.futures import ThreadPoolExecutor, wait
-import requests
 from configparser import ConfigParser
 
 from .zoopla import Zoopla, SearchParameters
