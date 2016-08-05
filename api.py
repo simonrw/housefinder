@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
+from concurrent.futures import ThreadPoolExecutor, wait
 import requests
 import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
@@ -217,10 +218,13 @@ if __name__ == '__main__':
 
     session = Session()
 
-    for listing in api.search_area(config['zoopla']['area'], search_params=params):
-        if not listing.persisted(session):
-            print(listing)
-            session.add(listing)
-            listing.post_to()
+    futures = []
+    with ThreadPoolExecutor() as executor:
+        for listing in api.search_area(config['zoopla']['area'], search_params=params):
+            if not listing.persisted(session):
+                print(listing)
+                session.add(listing)
+                futures.append(executor.submit(listing.post_to))
 
+    wait(futures)
     session.commit()
