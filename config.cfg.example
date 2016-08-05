@@ -9,6 +9,7 @@ area =
 [slack]
 api_key =
 channel =
+username =
 
 [trello]
 api_key =
