@@ -48,7 +48,14 @@ class Listing(Base):
 
 
 def create_session(config):
-    engine = sa.create_engine('postgres://simon@localhost/housefinder')
+    db = config['db']
+
+    engine = sa.create_engine('postgres://{user}@{host}/{db}'.format(
+        user=db['user'],
+        host=db['host'],
+        db=db['database'],
+    ))
+
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
 

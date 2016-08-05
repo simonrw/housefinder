@@ -15,3 +15,8 @@ api_key =
 token =
 board_id =
 list_id =
+
+[db]
+host =
+user =
+database =
