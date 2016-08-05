@@ -1,2 +1,5 @@
 venv
 config.cfg
+*.egg-info
+build
+*.pyc
