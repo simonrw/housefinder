@@ -6,12 +6,13 @@ class TrelloPoster(object):
     LISTS_URL = 'https://trello.com/1/lists/{list_id}/cards'
     ATTACHMENTS_URL = 'https://trello.com/1/cards/{card_id}/attachments'
 
-    def __init__(self, listing):
+    def __init__(self, listing, config):
         self.listing = listing
         self.session = requests.Session()
+        self.config = config
         self.session.params = {
-            'key': config['trello']['api_key'],
-            'token': config['trello']['token'],
+            'key': self.config['trello']['api_key'],
+            'token': self.config['trello']['token'],
         }
 
     def post(self):
@@ -35,7 +36,7 @@ class TrelloPoster(object):
 
         response = self.session.post(
             self.LISTS_URL.format(
-                list_id=config['trello']['list_id']
+                list_id=self.config['trello']['list_id']
             ),
             data=data,
         )
