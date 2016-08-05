@@ -32,6 +32,14 @@ your account settings page][2]. You can get a slack api key if you [add a bot
 user][3] to your organisation. Finally a Trello api key can be generated [using
 their developer documentation][4].
 
+Install the package with
+
+```sh
+pip install git+https://github.com/mindriot101/housefinder.git
+```
+
+and run the command `housefinder`.
+
 
 [1]: https://www.dataquest.io/blog/apartment-finding-slackbot/
 [Zoopla]: http://www.zoopla.co.uk/
