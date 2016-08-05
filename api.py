@@ -7,36 +7,16 @@ import requests
 import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from slackclient import SlackClient
 from configparser import ConfigParser
 
 config = ConfigParser()
 config.read('config.cfg')
 
-SLACK_API_KEY = config['slack']['api_key']
-SLACK_CHANNEL = config['slack']['channel']
 ZOOPLA_API_KEY = config['zoopla']['api_key']
 
 engine = sa.create_engine('postgres://simon@localhost/housefinder')
 Base = declarative_base(bind=engine)
 Session = sessionmaker(bind=engine)
-
-slack_client = SlackClient(SLACK_API_KEY)
-
-class SlackPoster(object):
-    def __init__(self, listing):
-        self.listing = listing
-        self.client = slack_client
-
-    def post(self):
-        desc = '{}, {} £{}k | {} bedrooms | detail: {} | {}'.format(
-            self.listing.property_type, self.listing.price_modifier_human,
-            self.listing.price_thousands, self.listing.num_bedrooms,
-            self.listing.details_url, self.listing.image_url)
-        self.client.api_call(
-            'chat.postMessage', channel=SLACK_CHANNEL, text=desc,
-            username='housefinder', icon_emoji=':robot_face:'
-        )
 
 class TrelloPoster(object):
 
