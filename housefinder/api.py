@@ -43,7 +43,9 @@ def main():
             if not listing.persisted(session):
                 print(listing)
                 session.add(listing)
-                futures.append(executor.submit(lambda: TrelloPoster(listing, config=config).post()))
+                futures.append(
+                    executor.submit(lambda: TrelloPoster(listing, config=config).post())
+                )
 
     wait(futures)
     session.commit()

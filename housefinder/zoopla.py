@@ -13,8 +13,8 @@ class SearchParameters(object):
             setattr(self, key, None)
 
     def serialize(self):
-        return { key: getattr(self, key) for key in self.keys
-                if getattr(self, key, None) is not None }
+        return {key: getattr(self, key) for key in self.keys
+                if getattr(self, key, None) is not None}
 
 
 class Zoopla(object):
@@ -34,7 +34,6 @@ class Zoopla(object):
         response.raise_for_status()
         return response.json()['result_count']
 
-
     def search_area(self, area, search_params=None):
         search_params = search_params if search_params is not None else SearchParameters()
 
@@ -50,12 +49,11 @@ class Zoopla(object):
             response.raise_for_status()
 
             json = response.json()
-            results_count = json['result_count']
             params['page_number'] = i + 1
 
             for listing in json['listing']:
                 column_names = Listing.metadata.tables['listings'].columns.keys()
-                listing = Listing(**{ key: listing.get(key) for key in column_names })
+                listing = Listing(**{key: listing.get(key) for key in column_names})
                 yield listing
 
             nentries -= 100
