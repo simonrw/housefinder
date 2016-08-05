@@ -9,3 +9,9 @@ area =
 [slack]
 api_key =
 channel =
+
+[trello]
+api_key =
+token =
+board_id =
+list_id =
