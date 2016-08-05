@@ -3,3 +3,5 @@ config.cfg
 *.egg-info
 build
 *.pyc
+dist
+.tox
