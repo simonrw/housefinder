@@ -4,18 +4,29 @@
 
 from concurrent.futures import ThreadPoolExecutor, wait
 from configparser import ConfigParser
+import argparse
 
 from .zoopla import Zoopla, SearchParameters
 from .db import create_session
 from .posters.trello import TrelloPoster
 
-config = ConfigParser()
-config.read('config.cfg')
-
-ZOOPLA_API_KEY = config['zoopla']['api_key']
 
 def main():
-    api = Zoopla(ZOOPLA_API_KEY)
+    description = '''
+    Find a house!
+    '''
+
+    epilog = '''
+    '''
+
+    parser = argparse.ArgumentParser(description=description, epilog=epilog)
+    parser.add_argument('-c', '--config', required=False, default='config.cfg')
+    args = parser.parse_args()
+
+    config = ConfigParser()
+    config.read(args.config)
+
+    api = Zoopla(config['zoopla']['api_key'])
 
     params = SearchParameters()
     params.minimum_price = config['zoopla']['minimum_price']

@@ -38,7 +38,7 @@ Install the package with
 pip install git+https://github.com/mindriot101/housefinder.git
 ```
 
-and run the command `housefinder`.
+and run the command `housefinder -c <config>`.
 
 
 [1]: https://www.dataquest.io/blog/apartment-finding-slackbot/
