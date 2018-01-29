@@ -10,8 +10,9 @@ class SlackPoster(object):
         self.username = config['slack'].get('username', 'housefinder')
 
     def post(self):
-        desc = '{}, {} £{}k | {} bedrooms | detail: {} | {}'.format(
-            self.listing.property_type, self.listing.price_modifier_human,
+        desc = '{}, {}, {} £{}k | {} bedrooms | detail: {} | {}'.format(
+            self.listing.property_type, self.listing.displayable_address,
+            self.listing.price_modifier_human,
             self.listing.price_thousands, self.listing.num_bedrooms,
             self.listing.details_url, self.listing.image_url)
         self.client.api_call(

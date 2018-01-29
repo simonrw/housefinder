@@ -9,6 +9,7 @@ import argparse
 from .zoopla import Zoopla, SearchParameters
 from .db import create_session
 from .posters.trello import TrelloPoster
+from .posters.slack import SlackPoster
 
 
 def main():
@@ -37,6 +38,8 @@ def main():
 
     session = create_session(config=config)()
 
+    listings = list(api.search_area(config['zoopla']['area'], search_params=params))
+
     futures = []
     with ThreadPoolExecutor() as executor:
         for listing in api.search_area(config['zoopla']['area'], search_params=params):
@@ -45,6 +48,9 @@ def main():
                 session.add(listing)
                 futures.append(
                     executor.submit(lambda: TrelloPoster(listing, config=config).post())
+                )
+                futures.append(
+                    executor.submit(lambda: SlackPoster(listing, config=config).post())
                 )
 
     wait(futures)
